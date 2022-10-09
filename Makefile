@@ -6,6 +6,9 @@ SCRIPT_PATH:=$(APP_PATH)/../scripts
 COMPILE_OUT:=$(APP_PATH)/../bin/$(APP_NAME)
 HUB_USER:=clickvisual
 
+debug:
+	cd api && go run main.go --config=../config/local.toml
+
 build: build.ui build.dist build.api
 
 docs:
@@ -30,7 +33,10 @@ build.ui:
 	@cd $(APP_PATH)/../ui && yarn install --frozen-lockfile && yarn run build
 	@echo -e "\n"
 
-docker:docker.build docker.push
+docker:
+	@echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>making $@<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
+	docker buildx build --platform linux/amd64,linux/arm64 --push -t docker.open.seastart.cn/vcs/clickvisual:latest .
+	@echo -e "\n"
 
 docker.build:
 	@echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>making $@<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"

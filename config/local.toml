@@ -1,0 +1,103 @@
+[app]
+isMultiCopy = false  # multi-copy mode: Redis must be configured, otherwise the service cannot start
+secretKey = "secretKey"
+rootURL = "http://localhost:19001/"
+baseURL = "/api/admin/login/"
+permissionFile = '../config/resource.yaml'
+serveFromSubPath = false
+
+[casbin.rule]
+path = "../config/rbac.conf"
+
+[server.http]
+# HTTP server Host
+host = "0.0.0.0"
+# HTTP server Port
+port = 19001
+embedPath = "dist"
+maxAge = 86400
+
+[server.governor]
+# Governor server host
+host = "0.0.0.0"
+# Governor server port
+port = 19011
+
+[logger]
+# log level, avaliable level: "debug", "info", "warn", "error", "panic", "fatal"
+level = "info"
+name = "clickvisual.log"
+
+[logger.default]
+level = "info"
+
+# if isMultiCopy is true
+[redis]
+debug = true
+addr = "127.0.0.1:6379"
+writeTimeout = "3s"
+password = "**"
+
+[mysql]
+debug = true
+# database DSN
+dsn = "root:M74ql_123456@tcp(127.0.0.1:3306)/clickvisual?charset=utf8mb4&collation=utf8mb4_general_ci&parseTime=True&loc=Local&readTimeout=1s&timeout=1s&writeTimeout=3s"
+# log level
+level = "debug"
+# maximum number of connections in the idle connection pool for database
+maxIdleConns = 5
+# maximum number of open connections for database
+maxOpenConns = 10
+# maximum amount of time a connection
+connMaxLifetime = "300s"
+
+[auth]
+mode = "memstore" # redis memstore
+name = "clickvisual_session"
+debug = true
+Keypairs = "secret"
+# if use mode redis
+# redisSize = 10
+# redisNetwork = "tcp"
+# redisAddr = ""
+# redisPassword = ""
+
+[auth.anonymous]
+# enable anonymous access
+enabled = false
+
+[auth.proxy]
+enabled = false
+isAutoLogin = false
+headerName = "X-CLICKVISUAL-USER"
+headerNickName = "X-CLICKVISUAL-NICKNAME"
+rootTokenKey = "X-CLICKVISUAL-TOKEN"
+rootTokenValue = "xxx"
+
+[[auth.tps]]
+typ = "github"
+enable = true
+clientId = ""
+clientSecret = ""
+allowSignUp = true
+scopes = ["user:email", "read:org"]
+authUrl = "https://github.com/login/oauth/authorize"
+tokenUrl = "https://github.com/login/oauth/access_token"
+apiUrl = "https://api.github.com/user"
+allowedDomains = []
+teamIds = []
+allowedOrganizations = []
+
+[[auth.tps]]
+typ = "gitlab"
+enable = true
+clientId = ""
+clientSecret = ""
+allowSignUp = true
+scopes = ["api"]
+authUrl = "https://gitlab.com/oauth/authorize"
+tokenUrl = "https://gitlab.com/oauth/token"
+apiUrl = "https://gitlab.com/api/v4"
+allowedDomains = []
+teamIds = []
+allowedOrganizations = []
